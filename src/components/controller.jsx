@@ -173,9 +173,6 @@ export default function Controller() {
                                                    className="form-control mx-sm-3"
                                                    aria-describedby="passwordHelpInline" onChange={onChange}
                                                    value={pass}/>
-                                            <small id="passwordHelpInline" className="text-muted" onChange={onchange}>
-                                                Must be 8-20 characters long.
-                                            </small>
                                             <button className={"btn btn-primary"}>Login
                                             </button>
                                         </div>

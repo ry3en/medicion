@@ -102,7 +102,6 @@ export default function Home() {
                     .from('mediciones')
                     .update({mantenimiento: peso, tipo: sel})
                     .eq('id', ID)
-                setX(false);
                 window.location.reload()
             } else {
                 alert("Se creara un nuevo registro")
@@ -121,7 +120,6 @@ export default function Home() {
                     .from('mediciones')
                     .update({Produccion: peso, tipo: sel})
                     .eq('id', ID)
-                     setX(x);
                 window.location.reload()
             } else {
                 alert("Se creara un nuevo registro")
@@ -189,7 +187,6 @@ export default function Home() {
                                         color='white'
                                         fontWeight='bold'
                                         borderRadius='md'
-                                        m={4}
                                         bgGradient='linear(to right, #4b79a1, #283e51)'
                                         _hover={{
                                             bgGradient: 'linear(to-r, red.500, yellow.500)',
@@ -237,9 +234,6 @@ export default function Home() {
                                                                className="form-control mx-sm-3"
                                                                aria-describedby="passwordHelpInline" onChange={onChange}
                                                                value={passM}/>
-                                                        <small id="passwordHelpInline" className="text-muted" onChange={onchange}>
-                                                            Must be 8-20 characters long.
-                                                        </small>
                                                         <button className={"btn btn-primary"}>Login
                                                         </button>
                                                     </div>
@@ -305,9 +299,6 @@ export default function Home() {
                                                                    className="form-control mx-sm-3"
                                                                    aria-describedby="passwordHelpInline" onChange={onChange}
                                                                    value={passP}/>
-                                                            <small id="passwordHelpInline" className="text-muted" onChange={onchange}>
-                                                                Must be 8-20 characters long.
-                                                            </small>
                                                             <button className={"btn btn-primary"}>Login
                                                             </button>
                                                         </div>
@@ -385,7 +376,6 @@ export default function Home() {
         </main>
     );
 }
-
 function search(Medicion, ID) {
     let x = false;
     for (let i=0; i<Medicion.length; i++) {
