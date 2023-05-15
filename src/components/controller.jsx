@@ -17,6 +17,7 @@ import {Form, Link} from "react-router-dom";
 import {FaHome} from "react-icons/fa";
 import {Field, Formik} from "formik";
 import {EditIcon} from "@chakra-ui/icons";
+import {Table} from "react-bootstrap";
 
 const supabaseUrl = "https://caeqghefggsotenegpzt.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhZXFnaGVmZ2dzb3RlbmVncHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODIzNjEzNDEsImV4cCI6MTk5NzkzNzM0MX0.CZ8e3D2Q8iGwixC8Hj1srZ8DvAs1UxkBLyvLVaZSvus";
@@ -139,7 +140,7 @@ export default function Controller() {
                                 </ModalContent>
                             </Modal>
 
-                            <table className="table table-hover" style={{border: "5px solid #e7e7e7"}}>
+                            <Table responsive bordered hover>
                                 <thead className="thead-dark">
                                 <tr>
                                     <th scope="col">ID</th>
@@ -147,22 +148,18 @@ export default function Controller() {
                                     <th scope="col">MANTENIIENTO</th>
                                     <th scope="col">LOGISTICS</th>
                                     <th scope="col">Tipo</th>
-
                                     <th scope="col">Diferencia M - L</th>
                                     <th scope="col">Diferencia P - L</th>
-
-                                    <th scope={"col"}>Ult. Actualizacion</th>
+                                    <th scope="col">Ult. Actualizacion</th>
                                     <th scope="col">Num Control</th>
                                 </tr>
                                 </thead>
-                                <tbody className={'table-light'}>
+                                <tbody className="table-light">
                                 {Medicion.map((med) => {
-                                    return (
-                                        <Row key={med} medicion={med}/>
-                                    )
+                                    return <Row key={med} medicion={med} />;
                                 })}
                                 </tbody>
-                            </table>
+                            </Table>
                         </> : <>
                             <Center>
                                 <div className="card" style={{width: 600}}>
