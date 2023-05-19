@@ -29,7 +29,6 @@ export default function Home() {
     const {isOpen: isPodOpen, onOpen: onPodOpen, onClose: onPodClose} = useDisclosure()
     const {isOpen: isMantOpen, onOpen: onMantOpen, onClose: onMantClose} = useDisclosure()
     const {isOpen: isLogOpen, onOpen: onLogOpen, onClose: onLogClose} = useDisclosure()
-    const {isOpen: isConOpen, onOpen: onConOpen, onClose: onConClose} = useDisclosure()
     const [sessionP, setSessionP] = useState(false);
     const [passM, setPassM] = useState("");
     const [passL, setPassL] = useState("");
@@ -38,7 +37,9 @@ export default function Home() {
     const [sessionL, setSessionL] = useState(false);
     const [passP, setPassP] = useState("");
     const [x, setX] = useState(false);
-
+    const [esp, setEsp] = useState(true);
+    const [eng, setEng] = useState(false);
+    const [fr, setFr] = useState(false);
 
     const [Medicion, setMedicion] = useState([]);
     const [ID, setId] = useState('');
@@ -54,7 +55,7 @@ export default function Home() {
         }
 
         getMed()
-    }, [peso]);
+    }, [peso,ID]);
 
 //CHANGE LABELS AND SET VARIABLE VALUES
     const onChange = async (e) => {
@@ -73,7 +74,7 @@ export default function Home() {
             setPassP(e.target.value)
         }
         if (e.target.name === "passL") {
-            setPassP(e.target.value)
+            setPassL(e.target.value)
         }
         if (e.target.name === "sel") {
             setSel(e.target.value)
@@ -139,260 +140,269 @@ export default function Home() {
             }
         } else if (e.target.name === "loginM") {
             if (passM === "@2582") {
-                setSessionM(true)
+                setSessionM(true);
             } else {
                 alert("contraseña Incorrecta")
             }
         } else if (e.target.name === "loginP") {
             if (passP === "@6556") {
-                setSessionP(true)
+                setSessionP(true);
             } else {
                 alert("contraseña Incorrecta")
             }
         } else if (e.target.name === "loginL") {
-            if (passP === "@5885") {
-                setSessionL(true)
+            if (passL === "@5885") {
+                setSessionL(true);
             } else {
-                alert("contraseña Incorrecta")
+                alert("contraseña Incorrecta");
             }
+        }else if (e.target.name === "gen") {
+            if (Medicion.length === 0){
+                setId(0+"A")
+            }else{
+                for (let i = 0; i < Medicion.length; i++) {
+                    if (Medicion.length < 100){
+                        setId(i+1 + "A");
+                        console.log(i+1 +"A")
+                    }else if(Medicion.length >100 && Medicion.length <200){
+                        setId(i+1 + "B");
+                        console.log(i+1 +"B")
+                    }
+                }
+            }
+        }else if(e.target.name === "esp"){
+            setEng(false);
+            setFr(false);
+            setEsp(true);
+            console.log(e.target.name);
+        }else if(e.target.name === "eng"){
+            setFr(false);
+            setEsp(false);
+            setEng(true);
+            console.log(e.target.name);
+
+        }else if(e.target.name === "fr"){
+            setEng(false);
+            setEsp(false);
+            setFr(true);
+            console.log(e.target.name);
+
         }
     }
 
     return (
         <main>
+            <Button fontSize='2xl'
+                    w={'10vh'} h={'10vh'}
+                    color='black'
+                    fontWeight='bold'
+                    borderRadius='md'
+                    variant={"solid"}
+                    name={"esp"}
+                    onClick={onSubmit}
+            >
+                ESP
+            </Button>
+            <Button fontSize='2xl'
+                    w={'10vh'} h={'10vh'}
+                    color='black'
+                    fontWeight='bold'
+                    borderRadius='md'
+                    variant={"solid"}
+                    name={"eng"}
+                    onClick={onSubmit}
+            >
+                ENG
+            </Button>
+            <Button fontSize='2xl'
+                    w={'10vh'} h={'10vh'}
+                    color='black'
+                    fontWeight='bold'
+                    borderRadius='md'
+                    variant={"solid"}
+                    name={"fr"}
+                    onClick={onSubmit}
+            >
+                FR
+            </Button>
             <Center h={['100vh', '100vh', '100vh', '100VH']} c="white">
+
                 <Flex direction={['column', 'column', 'column', 'row']}>
-                    <Box>
-                        <Center>
-                            <Image src={LOGO} alt="Dan Abramov"/>
-                        </Center>
-                        <Center>
-                            <Text
-                                bgGradient="linear(to right, #4b79a1, #283e51)"
-                                bgClip="text"
-                                fontSize={['4xl', '4xl', '6xl', '6xl']}
-                                fontWeight="extrabold"
-                            >
-                                Control de Salida de Materiales
-                            </Text>
-                        </Center>
 
-                        <Center>
-                            <Text
-                                bgGradient="linear(to right, #4b79a1, #283e51)"
-                                bgClip="text"
-                                fontSize={['2xl', '2xl', '4xl', '4xl']}
-                                fontWeight="extrabold"
-                            >
-                                Selecciona el Área a la que perteneces
-                            </Text>
-                        </Center>
-
-                        <Center>
-                            <Stack
-                                spacing={4}
-                                direction={['column', 'column', 'row', 'row']}
-                                align={['center', 'center', 'start', 'start']}>
-                                <Button fontSize='2xl'
-                                        leftIcon={<GiAutoRepair/>}
-                                        w={'35vh'} h={'10vh'}
-                                        p={4}
-                                        color='white'
-                                        fontWeight='bold'
-                                        borderRadius='md'
-                                        bgGradient='linear(to right, #4b79a1, #283e51)'
-                                        _hover={{
-                                            bgGradient: 'linear(to-r, red.500, yellow.500)',
-                                        }}
-                                        variant={"solid"}
-                                        onClick={onMantOpen}
-                                >Mantenimiento
-                                </Button>
-
-                                <Modal onClose={onMantClose} size={'xl'} isOpen={isMantOpen}>
-                                    <ModalOverlay/>
-                                    <ModalContent>
-                                        <ModalHeader>Mantenimiento</ModalHeader>
-                                        <ModalCloseButton/>
-                                        {sessionM === true ?
-                                            <>
-                                                <ModalBody>
-                                                    <form onSubmit={onSubmit} name={"mantenimiento"}>
-                                                        <FormLabel>ID</FormLabel>
-                                                        <Input name={"id"} placeholder='ID del contenedor'
-                                                               onChange={onChange}
-                                                               value={ID}/>
-                                                        <FormLabel>Peso</FormLabel>
-                                                        <Input name={"peso"} placeholder='Peso del contenedor '
-                                                               onChange={onChange} value={peso}/>
-                                                        <FormLabel>Tipo</FormLabel>
-                                                        <Select placeholder='-------' onChange={onChange} name={"sel"}>
-                                                            <option value='Purgas'>Purgas</option>
-                                                            <option value='Polvo'>Polvo</option>
-                                                            <option value='Material Contaminado'>Material Contaminado
-                                                            </option>
-                                                        </Select>
-                                                    </form>
-                                                </ModalBody>
-                                                <ModalFooter>
-                                                    <ButtonGroup gap='1'>
-                                                        <Button colorScheme='blue' onClick={onSubmit}
-                                                                name={"mant"}>Accept</Button>
-                                                        <Button colorScheme='red' onClick={onMantClose}>Close</Button>
-                                                    </ButtonGroup>
-                                                </ModalFooter>
-                                            </> : <>
-                                                <ModalBody>
-                                                    <form className="form-inline" name={"loginM"} onSubmit={onSubmit}>
-                                                        <div className="form-group">
-                                                            <label htmlFor="inputPassword6">Password</label>
-                                                            <input type="password" name={"passM"} id="inputPassword6"
-                                                                   className="form-control mx-sm-3"
-                                                                   aria-describedby="passwordHelpInline"
-                                                                   onChange={onChange}
-                                                                   value={passM}/>
-                                                            <button className={"btn btn-primary"}>Login
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </ModalBody>
-                                            </>
-                                        }
-                                    </ModalContent>
-                                </Modal>
-
-                                <Button fontSize='2xl'
-                                        leftIcon={<GoPerson/>}
-                                        w={'35vh'} h={'10vh'}
-                                        p={4}
-                                        color='white'
-                                        fontWeight='bold'
-                                        borderRadius='md'
-                                        bgGradient='linear(to right, #4b79a1, #283e51)'
-                                        _hover={{
-                                            bgGradient: 'linear(to-r, red.500, yellow.500)',
-                                        }}
-                                        variant={"solid"}
-                                        onClick={onPodOpen}
+                    {esp === true?
+                        <Box>
+                            <Center>
+                                <Image src={LOGO} alt="Dan Abramov"/>
+                            </Center>
+                            <Center>
+                                <Text
+                                    bgGradient="linear(to right, #4b79a1, #283e51)"
+                                    bgClip="text"
+                                    fontSize={['4xl', '4xl', '6xl', '6xl']}
+                                    fontWeight="extrabold"
                                 >
-                                    Produccion
-                                </Button>
+                                    Control de Salida de Materiales
+                                </Text>
+                            </Center>
 
-                                <Modal onClose={onPodClose} size={'xl'} isOpen={isPodOpen}>
-                                    <ModalOverlay/>
-                                    <ModalContent>
-                                        <ModalHeader>Produccion</ModalHeader>
-                                        <ModalCloseButton/>
-                                        {sessionP === true ?
-                                            <>
-                                                <ModalBody>
-                                                    <form name={"produccion"} onSubmit={onSubmit}>
-                                                        <FormLabel>ID</FormLabel>
-                                                        <Input id={"contenedor"} placeholder='ID del contenedor'
-                                                               onChange={onChange} name={"id"} value={ID}/>
-                                                        <FormLabel>Peso</FormLabel>
-                                                        <Input id={"peso"} placeholder='Peso del contenedor '
-                                                               onChange={onChange} name={"peso"} value={peso}/>
-                                                        <FormLabel>Tipo</FormLabel>
-                                                        <Select placeholder='-------' onChange={onChange} name={"sel"}>
-                                                            <option value='Purgas'>Purgas</option>
-                                                            <option value='Polvo'>Polvo</option>
-                                                            <option value='Material Contaminado'>Material Contaminado
-                                                            </option>
-                                                        </Select>
-                                                    </form>
-                                                </ModalBody>
-                                                <ModalFooter>
-                                                    <ButtonGroup gap='1'>
-                                                        <Button colorScheme='blue' onClick={onSubmit}
-                                                                name={"prod"}>Accept</Button>
-                                                        <Button colorScheme='red' onClick={onPodClose}>Close</Button>
-                                                    </ButtonGroup>
-                                                </ModalFooter>
-                                            </> : <>
-                                                <ModalBody>
-                                                    <form className="form-inline" name={"loginP"} onSubmit={onSubmit}>
-                                                        <div className="form-group">
-                                                            <label htmlFor="inputPassword6">Password</label>
-                                                            <input type="password" name={"passP"} id="inputPassword6"
-                                                                   className="form-control mx-sm-3"
-                                                                   aria-describedby="passwordHelpInline"
-                                                                   onChange={onChange}
-                                                                   value={passP}/>
-                                                            <button className={"btn btn-primary"}>Login
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </ModalBody>
-                                            </>
-                                        }
-                                    </ModalContent>
-                                </Modal>
-
-                                <Button fontSize='2xl'
-                                        leftIcon={<RiShipLine/>}
-                                        w={'35vh'} h={'10vh'}
-                                        p={4}
-                                        color='white'
-                                        fontWeight='bold'
-                                        borderRadius='md'
-                                        bgGradient='linear(to right, #4b79a1, #283e51)'
-
-                                        _hover={{
-                                            bgGradient: 'linear(to-r, red.500, yellow.500)',
-                                        }}
-                                        variant={"solid"}
-                                        onClick={onLogOpen}
+                            <Center>
+                                <Text
+                                    bgGradient="linear(to right, #4b79a1, #283e51)"
+                                    bgClip="text"
+                                    fontSize={['2xl', '2xl', '4xl', '4xl']}
+                                    fontWeight="extrabold"
                                 >
-                                    Logistica
-                                </Button>
+                                    Selecciona el Área a la que perteneces
+                                </Text>
+                            </Center>
 
-                                <Modal onClose={onLogClose} size={'xl'} isOpen={isLogOpen}>
-                                    <ModalOverlay/>
-                                    <ModalContent>
-                                        <ModalHeader>Logistica</ModalHeader>
-                                        <ModalCloseButton/>
-                                        {sessionL === true ?
-                                            <>
-                                                <ModalBody>
-                                                    <form name={"logistica"} onSubmit={onSubmit}>
-                                                        <FormLabel>ID</FormLabel>
-                                                        <Input id={"contenedor"} placeholder='ID del contenedor'
-                                                               onChange={onChange} name={"id"} value={ID}/>
-                                                        <FormLabel>Peso</FormLabel>
-                                                        <Input id={"peso"} placeholder='Peso del contenedor '
-                                                               onChange={onChange} name={"peso"} value={peso}/>
-                                                    </form>
-                                                </ModalBody>
-                                                <ModalFooter>
-                                                    <ButtonGroup gap='1'>
-                                                        <Button colorScheme='blue' onClick={onSubmit}
-                                                                name={"logistica"}>Accept</Button>
-                                                        <Button colorScheme='red' onClick={onLogClose}>Close</Button>
-                                                    </ButtonGroup>
-                                                </ModalFooter>
-                                            </> : <>
-                                                <ModalBody>
-                                                    <form className="form-inline" name={"loginP"} onSubmit={onSubmit}>
-                                                        <div className="form-group">
-                                                            <label htmlFor="inputPassword6">Password</label>
-                                                            <input type="password" name={"passP"} id="inputPassword6"
-                                                                   className="form-control mx-sm-3"
-                                                                   aria-describedby="passwordHelpInline"
-                                                                   onChange={onChange}
-                                                                   value={passP}/>
-                                                            <button className={"btn btn-primary"}>Login
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </ModalBody>
-                                            </>}
-                                    </ModalContent>
-                                </Modal>
-
-                                <Link to={'/controller'}>
+                            <Center>
+                                <Stack
+                                    spacing={4}
+                                    direction={['column', 'column', 'row', 'row']}
+                                    align={['center', 'center', 'start', 'start']}>
                                     <Button fontSize='2xl'
-                                            leftIcon={<RiAdminFill/>}
+                                            leftIcon={<GiAutoRepair/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onMantOpen}
+                                    >Mantenimiento
+                                    </Button>
+
+                                    <Modal onClose={onMantClose} size={'xl'} isOpen={isMantOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Mantenimiento</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionM === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form onSubmit={onSubmit} name={"GEN"}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input name={"id"} placeholder='ID del contenedor'
+                                                                   onChange={onChange}
+                                                                   value={ID}/>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"gen"}>Generar</Button>
+                                                            <FormLabel>Peso</FormLabel>
+                                                            <Input name={"peso"} placeholder='Peso del contenedor '
+                                                                   onChange={onChange} value={peso}/>
+                                                            <FormLabel>Tipo</FormLabel>
+                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                                <option value='Purgas'>Purgas</option>
+                                                                <option value='Polvo'>Polvo</option>
+                                                                <option value='Material Contaminado'>Material Contaminado
+                                                                </option>
+                                                            </Select>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"mant"}>Accept</Button>
+                                                            <Button colorScheme='red' onClick={onMantClose}>Close</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginM"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passM"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passM}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>
+                                            }
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Button fontSize='2xl'
+                                            leftIcon={<GoPerson/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onPodOpen}
+                                    >
+                                        Produccion
+                                    </Button>
+
+                                    <Modal onClose={onPodClose} size={'xl'} isOpen={isPodOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Produccion</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionP === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form name={"produccion"} onSubmit={onSubmit}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input id={"contenedor"} placeholder='ID del contenedor'
+                                                                   onChange={onChange} name={"id"} value={ID}/>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"gen"}>Generar</Button>
+                                                            <FormLabel>Peso</FormLabel>
+                                                            <Input id={"peso"} placeholder='Peso del contenedor '
+                                                                   onChange={onChange} name={"peso"} value={peso}/>
+                                                            <FormLabel>Tipo</FormLabel>
+                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                                <option value='Purgas'>Purgas</option>
+                                                                <option value='Polvo'>Polvo</option>
+                                                                <option value='Material Contaminado'>Material Contaminado
+                                                                </option>
+                                                            </Select>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"prod"}>Accept</Button>
+                                                            <Button colorScheme='red' onClick={onPodClose}>Close</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginP"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passP"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passP}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>
+                                            }
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Button fontSize='2xl'
+                                            leftIcon={<RiShipLine/>}
                                             w={'35vh'} h={'10vh'}
                                             p={4}
                                             color='white'
@@ -403,13 +413,583 @@ export default function Home() {
                                             _hover={{
                                                 bgGradient: 'linear(to-r, red.500, yellow.500)',
                                             }}
-                                            variant={"solid"}>
-                                        Controller
+                                            variant={"solid"}
+                                            onClick={onLogOpen}
+                                    >
+                                        Logistica
                                     </Button>
-                                </Link>
-                            </Stack>
-                        </Center>
-                    </Box>
+
+                                    <Modal onClose={onLogClose} size={'xl'} isOpen={isLogOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Logistica</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionL === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form name={"logistica"} onSubmit={onSubmit}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input id={"contenedor"} placeholder='ID del contenedor'
+                                                                   onChange={onChange} name={"id"} value={ID}/>
+                                                            <FormLabel>Peso</FormLabel>
+                                                            <Input id={"peso"} placeholder='Peso del contenedor '
+                                                                   onChange={onChange} name={"peso"} value={peso}/>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"logistica"}>Accept</Button>
+                                                            <Button colorScheme='red' onClick={onLogClose}>Close</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginL"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passL"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passL}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>}
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Link to={'/controller'}>
+                                        <Button fontSize='2xl'
+                                                leftIcon={<RiAdminFill/>}
+                                                w={'35vh'} h={'10vh'}
+                                                p={4}
+                                                color='white'
+                                                fontWeight='bold'
+                                                borderRadius='md'
+                                                bgGradient='linear(to right, #4b79a1, #283e51)'
+
+                                                _hover={{
+                                                    bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                                }}
+                                                variant={"solid"}>
+                                            Controller
+                                        </Button>
+                                    </Link>
+                                </Stack>
+                            </Center>
+                        </Box>: null
+                    }
+                    {eng === true?
+                        <Box>
+                            <Center>
+                                <Image src={LOGO} alt="Dan Abramov"/>
+                            </Center>
+                            <Center>
+                                <Text
+                                    bgGradient="linear(to right, #4b79a1, #283e51)"
+                                    bgClip="text"
+                                    fontSize={['4xl', '4xl', '6xl', '6xl']}
+                                    fontWeight="extrabold"
+                                >
+                                    Material Output Control
+                                </Text>
+                            </Center>
+
+                            <Center>
+                                <Text
+                                    bgGradient="linear(to right, #4b79a1, #283e51)"
+                                    bgClip="text"
+                                    fontSize={['2xl', '2xl', '4xl', '4xl']}
+                                    fontWeight="extrabold"
+                                >
+                                    Selecciona el Área a la que perteneces
+                                </Text>
+                            </Center>
+
+                            <Center>
+                                <Stack
+                                    spacing={4}
+                                    direction={['column', 'column', 'row', 'row']}
+                                    align={['center', 'center', 'start', 'start']}>
+                                    <Button fontSize='2xl'
+                                            leftIcon={<GiAutoRepair/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onMantOpen}
+                                    >Mantenimiento
+                                    </Button>
+
+                                    <Modal onClose={onMantClose} size={'xl'} isOpen={isMantOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Mantenimiento</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionM === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form onSubmit={onSubmit} name={"GEN"}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input name={"id"} placeholder='ID del contenedor'
+                                                                   onChange={onChange}
+                                                                   value={ID}/>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"gen"}>Generar</Button>
+                                                            <FormLabel>Peso</FormLabel>
+                                                            <Input name={"peso"} placeholder='Peso del contenedor '
+                                                                   onChange={onChange} value={peso}/>
+                                                            <FormLabel>Tipo</FormLabel>
+                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                                <option value='Purgas'>Purgas</option>
+                                                                <option value='Polvo'>Polvo</option>
+                                                                <option value='Material Contaminado'>Material Contaminado
+                                                                </option>
+                                                            </Select>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"mant"}>Accept</Button>
+                                                            <Button colorScheme='red' onClick={onMantClose}>Close</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginM"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passM"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passM}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>
+                                            }
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Button fontSize='2xl'
+                                            leftIcon={<GoPerson/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onPodOpen}
+                                    >
+                                        Produccion
+                                    </Button>
+
+                                    <Modal onClose={onPodClose} size={'xl'} isOpen={isPodOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Produccion</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionP === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form name={"produccion"} onSubmit={onSubmit}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input id={"contenedor"} placeholder='ID del contenedor'
+                                                                   onChange={onChange} name={"id"} value={ID}/>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"gen"}>Generar</Button>
+                                                            <FormLabel>Peso</FormLabel>
+                                                            <Input id={"peso"} placeholder='Peso del contenedor '
+                                                                   onChange={onChange} name={"peso"} value={peso}/>
+                                                            <FormLabel>Tipo</FormLabel>
+                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                                <option value='Purgas'>Purgas</option>
+                                                                <option value='Polvo'>Polvo</option>
+                                                                <option value='Material Contaminado'>Material Contaminado
+                                                                </option>
+                                                            </Select>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"prod"}>Accept</Button>
+                                                            <Button colorScheme='red' onClick={onPodClose}>Close</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginP"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passP"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passP}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>
+                                            }
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Button fontSize='2xl'
+                                            leftIcon={<RiShipLine/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onLogOpen}
+                                    >
+                                        Logistica
+                                    </Button>
+
+                                    <Modal onClose={onLogClose} size={'xl'} isOpen={isLogOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Logistica</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionL === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form name={"logistica"} onSubmit={onSubmit}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input id={"contenedor"} placeholder='ID del contenedor'
+                                                                   onChange={onChange} name={"id"} value={ID}/>
+                                                            <FormLabel>Peso</FormLabel>
+                                                            <Input id={"peso"} placeholder='Peso del contenedor '
+                                                                   onChange={onChange} name={"peso"} value={peso}/>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"logistica"}>Accept</Button>
+                                                            <Button colorScheme='red' onClick={onLogClose}>Close</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginL"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passL"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passL}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>}
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Link to={'/controller'}>
+                                        <Button fontSize='2xl'
+                                                leftIcon={<RiAdminFill/>}
+                                                w={'35vh'} h={'10vh'}
+                                                p={4}
+                                                color='white'
+                                                fontWeight='bold'
+                                                borderRadius='md'
+                                                bgGradient='linear(to right, #4b79a1, #283e51)'
+
+                                                _hover={{
+                                                    bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                                }}
+                                                variant={"solid"}>
+                                            Controller
+                                        </Button>
+                                    </Link>
+                                </Stack>
+                            </Center>
+                        </Box>: null
+                    }
+                    {fr === true?
+                        <Box>
+                            <Center>
+                                <Image src={LOGO} alt="Dan Abramov"/>
+                            </Center>
+                            <Center>
+                                <Text
+                                    bgGradient="linear(to right, #4b79a1, #283e51)"
+                                    bgClip="text"
+                                    fontSize={['4xl', '4xl', '6xl', '6xl']}
+                                    fontWeight="extrabold"
+                                >
+                                    Contrôle de la sortie des matériaux
+                                </Text>
+                            </Center>
+
+                            <Center>
+                                <Text
+                                    bgGradient="linear(to right, #4b79a1, #283e51)"
+                                    bgClip="text"
+                                    fontSize={['2xl', '2xl', '4xl', '4xl']}
+                                    fontWeight="extrabold"
+                                >
+                                    Sélectionnez la zone à laquelle vous appartenez
+                                </Text>
+                            </Center>
+
+                            <Center>
+                                <Stack
+                                    spacing={4}
+                                    direction={['column', 'column', 'row', 'row']}
+                                    align={['center', 'center', 'start', 'start']}>
+                                    <Button fontSize='2xl'
+                                            leftIcon={<GiAutoRepair/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onMantOpen}
+                                    >Entretien
+                                    </Button>
+
+                                    <Modal onClose={onMantClose} size={'xl'} isOpen={isMantOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Entretien</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionM === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form onSubmit={onSubmit} name={"GEN"}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input name={"id"} placeholder='ID de conteneur'
+                                                                   onChange={onChange}
+                                                                   value={ID}/>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"gen"}>Générer</Button>
+                                                            <FormLabel>Poids</FormLabel>
+                                                            <Input name={"peso"} placeholder='Poids du conteneur'
+                                                                   onChange={onChange} value={peso}/>
+                                                            <FormLabel>Mec</FormLabel>
+                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                                <option value='Purgas'>Purges</option>
+                                                                <option value='Polvo'>Poussière</option>
+                                                                <option value='Material Contaminado'>Matériel contaminé
+                                                                </option>
+                                                            </Select>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"mant"}>Accepter</Button>
+                                                            <Button colorScheme='red' onClick={onMantClose}>fermer</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginM"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passM"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passM}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>
+                                            }
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Button fontSize='2xl'
+                                            leftIcon={<GoPerson/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onPodOpen}
+                                    >
+                                        Production
+                                    </Button>
+
+                                    <Modal onClose={onPodClose} size={'xl'} isOpen={isPodOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Produccion</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionP === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form name={"produccion"} onSubmit={onSubmit}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input id={"contenedor"} placeholder='ID de conteneur'
+                                                                   onChange={onChange} name={"id"} value={ID}/>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"gen"}>Générer</Button>
+                                                            <FormLabel>Poids</FormLabel>
+                                                            <Input id={"peso"} placeholder='Poids du conteneur'
+                                                                   onChange={onChange} name={"peso"} value={peso}/>
+                                                            <FormLabel>Mec</FormLabel>
+                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                                <option value='Purgas'>Purges</option>
+                                                                <option value='Polvo'>Poussière</option>
+                                                                <option value='Material Contaminado'>Matériel contaminé</option>
+                                                            </Select>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"prod"}>Accepter</Button>
+                                                            <Button colorScheme='red' onClick={onPodClose}>Fermer</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginP"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passP"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passP}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>
+                                            }
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Button fontSize='2xl'
+                                            leftIcon={<RiShipLine/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onLogOpen}
+                                    >
+                                        Logistique
+                                    </Button>
+
+                                    <Modal onClose={onLogClose} size={'xl'} isOpen={isLogOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Logistique</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionL === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form name={"logistica"} onSubmit={onSubmit}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input id={"contenedor"} placeholder='ID de conteneur'
+                                                                   onChange={onChange} name={"id"} value={ID}/>
+                                                            <FormLabel>Poids</FormLabel>
+                                                            <Input id={"peso"} placeholder='Poids du conteneur'
+                                                                   onChange={onChange} name={"peso"} value={peso}/>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"logistica"}>Accept</Button>
+                                                            <Button colorScheme='red' onClick={onLogClose}>Close</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginL"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passL"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passL}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>}
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Link to={'/controller'}>
+                                        <Button fontSize='2xl'
+                                                leftIcon={<RiAdminFill/>}
+                                                w={'35vh'} h={'10vh'}
+                                                p={4}
+                                                color='white'
+                                                fontWeight='bold'
+                                                borderRadius='md'
+                                                bgGradient='linear(to right, #4b79a1, #283e51)'
+
+                                                _hover={{
+                                                    bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                                }}
+                                                variant={"solid"}>
+                                            Contrôleur
+                                        </Button>
+                                    </Link>
+                                </Stack>
+                            </Center>
+                        </Box>: null
+                    }
                 </Flex>
             </Center>
         </main>

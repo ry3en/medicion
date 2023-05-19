@@ -20,7 +20,6 @@ const supabaseUrl = "https://caeqghefggsotenegpzt.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhZXFnaGVmZ2dzb3RlbmVncHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODIzNjEzNDEsImV4cCI6MTk5NzkzNzM0MX0.CZ8e3D2Q8iGwixC8Hj1srZ8DvAs1UxkBLyvLVaZSvus";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
 export default function Controller() {
 
     const [Medicion, setMedicion] = useState([]);
@@ -29,7 +28,9 @@ export default function Controller() {
     const [numc, setNc] = useState("");
     const [ID, setId] = useState("");
     const [x, setX] = useState(false);
-
+    const [esp, setEsp] = useState(true);
+    const [eng, setEng] = useState(false);
+    const [fr, setFr] = useState(false);
     const {isOpen: isConOpen, onOpen: onConOpen, onClose: onConClose} = useDisclosure()
 
     const onSubmit = async (e) => {
@@ -49,7 +50,7 @@ export default function Controller() {
                     .eq('id', ID)
                 alert("Numero de control añadido")
                 setX(false)
-            }else{
+            } else {
                 alert("No se encontro el ID")
             }
         }
@@ -84,98 +85,195 @@ export default function Controller() {
                 <li><Link to={'/'}> <Icon as={FaHome} w={10} h={10}/> Home</Link></li>
             </ul>
             <Center h={'100vh'} bgGradient={'linear(to right, #2196f3, #f44336)'}>
-                <div className={'w-75 p-3'}>
-                    {session === true ?
-                        <>
-                            <Center>
-                                <Text
-                                    bgGradient='linear(62deg, #FBAB7E 0%, #F7CE68 100%)'
-                                    bgClip='text'
-                                    fontSize='6xl'
-                                    fontWeight='extrabold'
+                {esp === true ?
+                    <div className={'w-75 p-3'}>
+                        {session === true ?
+                            <>
+                                <Center>
+                                    <Text
+                                        bgGradient='linear(62deg, #FBAB7E 0%, #F7CE68 100%)'
+                                        bgClip='text'
+                                        fontSize='6xl'
+                                        fontWeight='extrabold'
+                                    >
+                                        Controller
+                                    </Text>
+                                </Center>
+                                <br/><br/><br/>
+                                <Button leftIcon={<EditIcon/>}
+                                        p={3}
+                                        name={"asd"}
+                                        color='white'
+                                        fontWeight='bold'
+                                        borderRadius='md'
+                                        colorScheme='whiteAlpha'
+                                        onSubmit={onSubmit}
+                                        variant={"solid"}
+                                        onClick={onConOpen}
                                 >
-                                    Controller
-                                </Text>
-                            </Center>
-                            <br/><br/><br/>
-                            <Button leftIcon={<EditIcon/>}
-                                    p={3}
-                                    name={"asd"}
-                                    color='white'
-                                    fontWeight='bold'
-                                    borderRadius='md'
-                                    colorScheme='whiteAlpha'
-                                    onSubmit={onSubmit}
-                                    variant={"solid"}
-                                    onClick={onConOpen}
-                            >
-                                Actualizar
-                            </Button>
-                            <Modal onClose={onConClose} size={'xl'} isOpen={isConOpen}>
-                                <ModalOverlay/>
-                                <ModalContent>
-                                    <ModalHeader>Agregar Numero de control</ModalHeader>
-                                    <ModalCloseButton/>
-                                    <ModalBody>
-                                        <form>
-                                            <FormLabel>ID</FormLabel>
-                                            <Input id={"contenedor"} placeholder='ID del contenedor'
-                                                   onChange={onChange} name={"id"} value={ID}/>
-                                            <FormLabel>Numero de Control</FormLabel>
-                                            <Input id={"peso"} placeholder='Peso del contenedor '
-                                                   onChange={onChange} name={"numc"} value={numc}/>
+                                    Actualizar
+                                </Button>
+                                <Modal onClose={onConClose} size={'xl'} isOpen={isConOpen}>
+                                    <ModalOverlay/>
+                                    <ModalContent>
+                                        <ModalHeader>Agregar Numero de control</ModalHeader>
+                                        <ModalCloseButton/>
+                                        <ModalBody>
+                                            <form>
+                                                <FormLabel>ID</FormLabel>
+                                                <Input id={"contenedor"} placeholder='ID del contenedor'
+                                                       onChange={onChange} name={"id"} value={ID}/>
+                                                <FormLabel>Numero de Control</FormLabel>
+                                                <Input id={"peso"} placeholder='Numero de control'
+                                                       onChange={onChange} name={"numc"} value={numc}/>
+                                            </form>
+                                        </ModalBody>
+
+                                        <ModalFooter>
+                                            <ButtonGroup gap='1'>
+                                                <Button colorScheme='blue' name={"update"}
+                                                        onClick={onSubmit}>Accept</Button>
+                                                <Button colorScheme='red' onClick={onConClose}>Close</Button>
+                                            </ButtonGroup>
+                                        </ModalFooter>
+                                    </ModalContent>
+                                </Modal>
+
+                                <Table responsive bordered hover>
+                                    <thead className="thead-dark">
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">PRODUCCION</th>
+                                        <th scope="col">MANTENIIENTO</th>
+                                        <th scope="col">LOGISTICS</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Diferencia M - L</th>
+                                        <th scope="col">Diferencia P - L</th>
+                                        <th scope="col">Ult. Actualizacion</th>
+                                        <th scope="col">Num Control</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody className="table-light">
+                                    {Medicion.map((med) => {
+                                        return <Row key={med} medicion={med}/>;
+                                    })}
+                                    </tbody>
+                                </Table>
+                            </> : <>
+                                <Center>
+                                    <div className="card" style={{width: 600}}>
+                                        <form className="form-inline" name={"login"} onSubmit={onSubmit}>
+                                            <div className="form-group">
+                                                <label htmlFor="inputPassword6">Password</label>
+                                                <input type="password" name={"pass"} id="inputPassword6"
+                                                       className="form-control mx-sm-3"
+                                                       aria-describedby="passwordHelpInline" onChange={onChange}
+                                                       value={pass}/>
+                                                <button className={"btn btn-primary"}>Login
+                                                </button>
+                                            </div>
                                         </form>
-                                    </ModalBody>
+                                    </div>
+                                </Center>
+                            </>
+                        }
+                    </div> : null}
+                {eng === true ?
+                    <>
+                        <div className={'w-75 p-3'}>
+                            {session === true ?
+                                <>
+                                    <Center>
+                                        <Text
+                                            bgGradient='linear(62deg, #FBAB7E 0%, #F7CE68 100%)'
+                                            bgClip='text'
+                                            fontSize='6xl'
+                                            fontWeight='extrabold'
+                                        >
+                                            Controller
+                                        </Text>
+                                    </Center>
+                                    <br/><br/><br/>
+                                    <Button leftIcon={<EditIcon/>}
+                                            p={3}
+                                            name={"asd"}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            colorScheme='whiteAlpha'
+                                            onSubmit={onSubmit}
+                                            variant={"solid"}
+                                            onClick={onConOpen}
+                                    >
+                                        Update
+                                    </Button>
+                                    <Modal onClose={onConClose} size={'xl'} isOpen={isConOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Agregar Numero de control</ModalHeader>
+                                            <ModalCloseButton/>
+                                            <ModalBody>
+                                                <form>
+                                                    <FormLabel>ID</FormLabel>
+                                                    <Input id={"contenedor"} placeholder='ID del contenedor'
+                                                           onChange={onChange} name={"id"} value={ID}/>
+                                                    <FormLabel>Numero de Control</FormLabel>
+                                                    <Input id={"peso"} placeholder='Numero de control'
+                                                           onChange={onChange} name={"numc"} value={numc}/>
+                                                </form>
+                                            </ModalBody>
 
-                                    <ModalFooter>
-                                        <ButtonGroup gap='1'>
-                                            <Button colorScheme='blue' name={"update"}
-                                                    onClick={onSubmit}>Accept</Button>
-                                            <Button colorScheme='red' onClick={onConClose}>Close</Button>
-                                        </ButtonGroup>
-                                    </ModalFooter>
-                                </ModalContent>
-                            </Modal>
+                                            <ModalFooter>
+                                                <ButtonGroup gap='1'>
+                                                    <Button colorScheme='blue' name={"update"}
+                                                            onClick={onSubmit}>Accept</Button>
+                                                    <Button colorScheme='red' onClick={onConClose}>Close</Button>
+                                                </ButtonGroup>
+                                            </ModalFooter>
+                                        </ModalContent>
+                                    </Modal>
 
-                            <Table responsive bordered hover>
-                                <thead className="thead-dark">
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">PRODUCCION</th>
-                                    <th scope="col">MANTENIIENTO</th>
-                                    <th scope="col">LOGISTICS</th>
-                                    <th scope="col">Tipo</th>
-                                    <th scope="col">Diferencia M - L</th>
-                                    <th scope="col">Diferencia P - L</th>
-                                    <th scope="col">Ult. Actualizacion</th>
-                                    <th scope="col">Num Control</th>
-                                </tr>
-                                </thead>
-                                <tbody className="table-light">
-                                {Medicion.map((med) => {
-                                    return <Row key={med} medicion={med} />;
-                                })}
-                                </tbody>
-                            </Table>
-                        </> : <>
-                            <Center>
-                                <div className="card" style={{width: 600}}>
-                                    <form className="form-inline" name={"login"} onSubmit={onSubmit}>
-                                        <div className="form-group">
-                                            <label htmlFor="inputPassword6">Password</label>
-                                            <input type="password" name={"pass"} id="inputPassword6"
-                                                   className="form-control mx-sm-3"
-                                                   aria-describedby="passwordHelpInline" onChange={onChange}
-                                                   value={pass}/>
-                                            <button className={"btn btn-primary"}>Login
-                                            </button>
+                                    <Table responsive bordered hover>
+                                        <thead className="thead-dark">
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">PRODUCTION</th>
+                                            <th scope="col">MAINTENANCE</th>
+                                            <th scope="col">LOGISTICS</th>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Difference M - L</th>
+                                            <th scope="col">Difference P - L</th>
+                                            <th scope="col">Creation Date</th>
+                                            <th scope="col">Control Number</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody className="table-light">
+                                        {Medicion.map((med) => {
+                                            return <Row key={med} medicion={med}/>;
+                                        })}
+                                        </tbody>
+                                    </Table>
+                                </> : <>
+                                    <Center>
+                                        <div className="card" style={{width: 600}}>
+                                            <form className="form-inline" name={"login"} onSubmit={onSubmit}>
+                                                <div className="form-group">
+                                                    <label htmlFor="inputPassword6">Password</label>
+                                                    <input type="password" name={"pass"} id="inputPassword6"
+                                                           className="form-control mx-sm-3"
+                                                           aria-describedby="passwordHelpInline" onChange={onChange}
+                                                           value={pass}/>
+                                                    <button className={"btn btn-primary"}>Login
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
-                                    </form>
-                                </div>
-                            </Center>
-                        </>
-                    }
-                </div>
+                                    </Center>
+                                </>
+                            }
+                        </div>
+                    </> : null
+                }
             </Center>
         </>
     );
