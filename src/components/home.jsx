@@ -506,7 +506,7 @@ export default function Home() {
                                     fontSize={['2xl', '2xl', '4xl', '4xl']}
                                     fontWeight="extrabold"
                                 >
-                                    Selecciona el Área a la que perteneces
+                                    Select the Area to which you belong
                                 </Text>
                             </Center>
 
@@ -528,13 +528,13 @@ export default function Home() {
                                             }}
                                             variant={"solid"}
                                             onClick={onMantOpen}
-                                    >Mantenimiento
+                                    >Maintenance
                                     </Button>
 
                                     <Modal onClose={onMantClose} size={'xl'} isOpen={isMantOpen}>
                                         <ModalOverlay/>
                                         <ModalContent>
-                                            <ModalHeader>Mantenimiento</ModalHeader>
+                                            <ModalHeader>Maintenance</ModalHeader>
                                             <ModalCloseButton/>
                                             {sessionM === true ?
                                                 <>
@@ -545,7 +545,7 @@ export default function Home() {
                                                                    onChange={onChange}
                                                                    value={ID}/>
                                                             <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"gen"}>Generar</Button>
+                                                                    name={"gen"}>Generate</Button>
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input name={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} value={peso}/>
@@ -599,13 +599,13 @@ export default function Home() {
                                             variant={"solid"}
                                             onClick={onPodOpen}
                                     >
-                                        Produccion
+                                        Production
                                     </Button>
 
                                     <Modal onClose={onPodClose} size={'xl'} isOpen={isPodOpen}>
                                         <ModalOverlay/>
                                         <ModalContent>
-                                            <ModalHeader>Produccion</ModalHeader>
+                                            <ModalHeader>Production</ModalHeader>
                                             <ModalCloseButton/>
                                             {sessionP === true ?
                                                 <>
@@ -670,13 +670,13 @@ export default function Home() {
                                             variant={"solid"}
                                             onClick={onLogOpen}
                                     >
-                                        Logistica
+                                        Logistic
                                     </Button>
 
                                     <Modal onClose={onLogClose} size={'xl'} isOpen={isLogOpen}>
                                         <ModalOverlay/>
                                         <ModalContent>
-                                            <ModalHeader>Logistica</ModalHeader>
+                                            <ModalHeader>Logistic</ModalHeader>
                                             <ModalCloseButton/>
                                             {sessionL === true ?
                                                 <>
