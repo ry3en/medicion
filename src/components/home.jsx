@@ -156,17 +156,32 @@ export default function Home() {
             } else {
                 alert("contraseña Incorrecta");
             }
-        }else if (e.target.name === "gen") {
-            if (Medicion.length === 0){
-                setId(0+"A")
-            }else{
-                for (let i = 0; i < Medicion.length; i++) {
-                    if (Medicion.length < 100){
-                        setId(i+1 + "A");
-                        console.log(i+1 +"A")
-                    }else if(Medicion.length >100 && Medicion.length <200){
-                        setId(i+1 + "B");
-                        console.log(i+1 +"B")
+        }else if (e.target.name === "genP") {
+            if (Medicion.length === 0) {
+                setId(1)
+            } else {
+                for (let i = 1; i < Medicion.length; i++) {
+                    if (Medicion.length < 500) {
+                        setId(i + 1);
+                        console.log(i + 1)
+                    } else if (Medicion.length > 1000 && Medicion.length < 1500) {
+                        setId(i + 1);
+                        console.log(i + 1)
+                    }
+                }
+            }
+        }
+        else if (e.target.name === "genM") {
+            if (Medicion.length === 500) {
+                setId(501)
+            } else {
+                for (let i = 500; i < Medicion.length; i++) {
+                    if (Medicion.length < 1000) {
+                        setId(i + 1);
+                        console.log(i + 1)
+                    } else if (Medicion.length > 1500 && Medicion.length < 2000) {
+                        setId(i + 1);
+                        console.log(i + 1)
                     }
                 }
             }
@@ -291,7 +306,7 @@ export default function Home() {
                                                                    onChange={onChange}
                                                                    value={ID}/>
                                                             <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"gen"}>Generar</Button>
+                                                                    name={"genM"}>Generar</Button>
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input name={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} value={peso}/>
@@ -361,7 +376,7 @@ export default function Home() {
                                                             <Input id={"contenedor"} placeholder='ID del contenedor'
                                                                    onChange={onChange} name={"id"} value={ID}/>
                                                             <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"gen"}>Generar</Button>
+                                                                    name={"genP"}>Generar</Button>
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input id={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} name={"peso"} value={peso}/>
@@ -545,7 +560,7 @@ export default function Home() {
                                                                    onChange={onChange}
                                                                    value={ID}/>
                                                             <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"gen"}>Generate</Button>
+                                                                    name={"genM"}>Generate</Button>
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input name={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} value={peso}/>
@@ -615,7 +630,7 @@ export default function Home() {
                                                             <Input id={"contenedor"} placeholder='ID del contenedor'
                                                                    onChange={onChange} name={"id"} value={ID}/>
                                                             <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"gen"}>Generar</Button>
+                                                                    name={"genP"}>Generar</Button>
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input id={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} name={"peso"} value={peso}/>
@@ -623,8 +638,8 @@ export default function Home() {
                                                             <Select placeholder='-------' onChange={onChange} name={"sel"}>
                                                                 <option value='Purgas'>Purgas</option>
                                                                 <option value='Polvo'>Polvo</option>
-                                                                <option value='Material Contaminado'>Material Contaminado
-                                                                </option>
+                                                                <option value='Material Contaminado'>Material Contaminado </option>
+                                                                <option value='Material Contaminado'>Regenerado Contaminado </option>
                                                             </Select>
                                                         </form>
                                                     </ModalBody>

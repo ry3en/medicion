@@ -31,6 +31,8 @@ export default function Controller() {
     const [esp, setEsp] = useState(true);
     const [eng, setEng] = useState(false);
     const [fr, setFr] = useState(false);
+    const [filt, setFilt] = useState("");
+    const [filteredMedicion, setFilteredMedicion] = useState([]);
     const {isOpen: isConOpen, onOpen: onConOpen, onClose: onConClose} = useDisclosure()
 
     const onSubmit = async (e) => {
@@ -63,28 +65,41 @@ export default function Controller() {
             setNc(e.target.value)
         } else if (e.target.name === "id") {
             setId(e.target.value)
+        }else if (e.target.name === "filter") {
+            setFilt(e.target.value)
+            console.log(filt)
         }
     }
 
 
     useEffect(function () {
-        async function getMed() {
-            const {data: mediciones, error} = await supabase
-                .from('mediciones')
-                .select('*')
-            setMedicion(mediciones)
-            console.log(Medicion)
-        }
 
+        async function getMed() {
+            if (filt === "") {
+                const {data: mediciones, error} = await supabase
+                    .from('mediciones')
+                    .select('*')
+                setMedicion(mediciones)
+                console.log(Medicion, "todos")
+            } else {
+                const {data: mediciones, error} = await supabase
+                    .from('mediciones')
+                    .select('*')
+                    .like('num_control', "%" + filt + "%")
+                setFilteredMedicion(mediciones);
+                console.log(Medicion, "filtered")
+            }
+
+        }
         getMed()
-    }, [x]);
+    }, [ filt ]);
 
     return (
         <>
             <ul className="nav justify-content-center">
                 <li><Link to={'/'}> <Icon as={FaHome} w={10} h={10}/> Home</Link></li>
             </ul>
-            <Center h={'100vh'} bgGradient={'linear(to right, #2196f3, #f44336)'}>
+            <Center h={'100%'} bgGradient={'linear(to right, #2196f3, #f44336)'}>
                 {esp === true ?
                     <div className={'w-75 p-3'}>
                         {session === true ?
@@ -113,6 +128,10 @@ export default function Controller() {
                                 >
                                     Actualizar
                                 </Button>
+
+                               {/* <Input id={"contenedor"} placeholder='ID del contenedor'
+                                       onChange={onChange} name={"filter"} value={filt}/>*/}
+
                                 <Modal onClose={onConClose} size={'xl'} isOpen={isConOpen}>
                                     <ModalOverlay/>
                                     <ModalContent>
@@ -154,9 +173,25 @@ export default function Controller() {
                                     </tr>
                                     </thead>
                                     <tbody className="table-light">
-                                    {Medicion.map((med) => {
-                                        return <Row key={med} medicion={med}/>;
-                                    })}
+                                    {Medicion === null ?
+                                        <>
+                                            <td className={"id"}></td>
+                                            <td className={"Produccion"}></td>
+                                            <td className={"Mantenimiento"}></td>
+                                            <td className={"Logistica"}></td>
+                                            <td></td>
+                                            <td> No hay registros</td>
+                                            <td className={"Tipo"}></td>
+                                            <td></td>
+                                            <td></td>
+                                        </> :
+                                        <>
+                                            {Medicion.map((med) => {
+                                                return <Row key={med} medicion={med}/>;
+                                            })}
+
+                                        </>
+                                    }
                                     </tbody>
                                 </Table>
                             </> : <>
@@ -276,7 +311,8 @@ export default function Controller() {
                 }
             </Center>
         </>
-    );
+    )
+        ;
 }
 
 function search(Medicion, ID, x) {
