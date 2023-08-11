@@ -1,9 +1,19 @@
 import {
-    Button, ButtonGroup,
+    Button,
+    ButtonGroup,
     Center,
     FormLabel,
     Icon,
-    Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
+    Input,
+    InputLeftAddon, InputRightAddon,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Stack,
     Text,
     useDisclosure
 } from "@chakra-ui/react";
@@ -14,7 +24,7 @@ import {Form, Link} from "react-router-dom";
 import {FaHome} from "react-icons/fa";
 import {Field, Formik} from "formik";
 import {EditIcon} from "@chakra-ui/icons";
-import {Table} from "react-bootstrap";
+import {InputGroup, Table} from "react-bootstrap";
 
 const supabaseUrl = "https://caeqghefggsotenegpzt.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhZXFnaGVmZ2dzb3RlbmVncHp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODIzNjEzNDEsImV4cCI6MTk5NzkzNzM0MX0.CZ8e3D2Q8iGwixC8Hj1srZ8DvAs1UxkBLyvLVaZSvus";
@@ -32,7 +42,7 @@ export default function Controller() {
     const [eng, setEng] = useState(false);
     const [fr, setFr] = useState(false);
     const [filt, setFilt] = useState("");
-    const [filteredMedicion, setFilteredMedicion] = useState([]);
+    const [xid, setXID] = useState("");
     const {isOpen: isConOpen, onOpen: onConOpen, onClose: onConClose} = useDisclosure()
 
     const onSubmit = async (e) => {
@@ -41,7 +51,7 @@ export default function Controller() {
             if (pass === "@%123") {
                 setSession(true)
             } else {
-                alert("contraseña Incorrecta")
+                alert("Wrong Password")
             }
         } else if (e.target.name === 'update') {
             setX(search(Medicion, ID, x))
@@ -65,34 +75,55 @@ export default function Controller() {
             setNc(e.target.value)
         } else if (e.target.name === "id") {
             setId(e.target.value)
-        }else if (e.target.name === "filter") {
+        } else if (e.target.name === "IDD") {
+            setXID(e.target.value)
+        }
+        else if (e.target.name === "filter") {
             setFilt(e.target.value)
             console.log(filt)
         }
     }
 
-
-    useEffect(function () {
-
-        async function getMed() {
-            if (filt === "") {
-                const {data: mediciones, error} = await supabase
-                    .from('mediciones')
-                    .select('*')
-                setMedicion(mediciones)
-                console.log(Medicion, "todos")
-            } else {
-                const {data: mediciones, error} = await supabase
-                    .from('mediciones')
-                    .select('*')
-                    .like('num_control', "%" + filt + "%")
-                setFilteredMedicion(mediciones);
-                console.log(Medicion, "filtered")
-            }
-
+    async function getMed() {
+        if (filt === "" && xid ==="") {
+            const {data: mediciones, error} = await supabase
+                .from('mediciones')
+                .select('*')
+                .order('id', { ascending: false })
+            setMedicion(mediciones)
+            console.log(Medicion, "todos")
+        } else if (filt !== "" && xid === "") {
+            const {data: mediciones, error} = await supabase
+                .from('mediciones')
+                .select('*')
+                .eq('num_control', filt)
+                .order('id', { ascending: false })
+            setMedicion(mediciones)
+            console.log("%" + filt + "%", "filtered NUM CONT")
+        }else if (filt === "" && xid !== "") {
+            const {data: mediciones, error} = await supabase
+                .from('mediciones')
+                .select('*')
+                .eq('id', xid)
+                .order('id', { ascending: false })
+            setMedicion(mediciones)
+            console.log("%" + filt + "%", "filtered ID")
         }
+        else if (filt !== "" && xid !== "") {
+            const {data: mediciones, error} = await supabase
+                .from('mediciones')
+                .select('*')
+                .eq( 'id', xid)
+                .eq( 'num_control', filt)
+                .order('id', { ascending: false })
+            setMedicion(mediciones)
+            console.log("%" + filt + "%", "filtered ID")
+        }
+    }
+
+    useEffect(() => {
         getMed()
-    }, [ filt ]);
+    }, [filt, xid]);
 
     return (
         <>
@@ -129,8 +160,16 @@ export default function Controller() {
                                     Actualizar
                                 </Button>
 
-                               {/* <Input id={"contenedor"} placeholder='ID del contenedor'
-                                       onChange={onChange} name={"filter"} value={filt}/>*/}
+                                <spacer type="horizontal" width="100" height="100"> ♢ </spacer>
+
+                                <Input htmlSize={6} width='auto' id={"contenedor demo-helper-text-aligned"}
+                                       placeholder='ID'
+                                       onChange={onChange} name={"IDD"} value={xid} variant='filled'/>
+                                <spacer type="horizontal" width="100" height="100"> ♢ </spacer>
+
+                                <Input htmlSize={14} width='auto' id={"contenedor demo-helper-text-aligned"}
+                                       placeholder='ID del contenedor'
+                                       onChange={onChange} name={"filter"} value={filt} variant='filled'/>
 
                                 <Modal onClose={onConClose} size={'xl'} isOpen={isConOpen}>
                                     <ModalOverlay/>
@@ -187,7 +226,7 @@ export default function Controller() {
                                         </> :
                                         <>
                                             {Medicion.map((med) => {
-                                                return <Row key={med} medicion={med}/>;
+                                                return <Row key={med.id} medicion={med}/>;
                                             })}
 
                                         </>
@@ -283,9 +322,10 @@ export default function Controller() {
                                         </tr>
                                         </thead>
                                         <tbody className="table-light">
-                                        {Medicion.map((med) => {
-                                            return <Row key={med} medicion={med}/>;
-                                        })}
+                                        {
+                                            Medicion.map((med) => {
+                                                return <Row key={med} medicion={med}/>;
+                                            })}
                                         </tbody>
                                     </Table>
                                 </> : <>
@@ -311,8 +351,7 @@ export default function Controller() {
                 }
             </Center>
         </>
-    )
-        ;
+    );
 }
 
 function search(Medicion, ID, x) {

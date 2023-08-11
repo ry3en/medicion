@@ -32,7 +32,7 @@ export default function Home() {
     const [sessionP, setSessionP] = useState(false);
     const [passM, setPassM] = useState("");
     const [passL, setPassL] = useState("");
-    const [sel, setSel] = useState("")
+    const [tipo, setTip] = useState("")
     const [sessionM, setSessionM] = useState(false);
     const [sessionL, setSessionL] = useState(false);
     const [passP, setPassP] = useState("");
@@ -44,18 +44,16 @@ export default function Home() {
     const [Medicion, setMedicion] = useState([]);
     const [ID, setId] = useState('');
     const [peso, setPeso] = useState('');
-    useEffect(function () {
-        //GETS THE ROWS FROM SUPABASE
-        async function getMed() {
-            const {data: mediciones, error} = await supabase
-                .from('mediciones')
-                .select('*')
-            setMedicion(mediciones)
-            console.log(Medicion)
-        }
 
-        getMed()
-    }, [peso,ID]);
+
+    async function getMed() {
+        const {data: mediciones, error} = await supabase
+            .from('mediciones')
+            .select('*')
+        setMedicion(mediciones)
+        console.log(Medicion)
+    }
+    
 
 //CHANGE LABELS AND SET VARIABLE VALUES
     const onChange = async (e) => {
@@ -76,9 +74,9 @@ export default function Home() {
         if (e.target.name === "passL") {
             setPassL(e.target.value)
         }
-        if (e.target.name === "sel") {
-            setSel(e.target.value)
-            console.log(sel)
+        if (e.target.name === "tipo") {
+            setTip(e.target.value)
+            console.log(tipo)
         }
     }
     const onSubmit = async (e) => {
@@ -89,7 +87,7 @@ export default function Home() {
             setX(search(Medicion, ID));
             //checks if id already exist
             if (x === true) {
-                alert("Se actuaizara el registro ", ID)
+                alert("Updating ", ID)
                 const {data, error} = await supabase
                     .from('mediciones')
                     .update({logistica: peso})
@@ -105,56 +103,68 @@ export default function Home() {
             //search in the array
             console.log(x, "1")
             if (search(Medicion, ID) === true) {
-                alert("Se actuaizara el registro ", ID)
+                alert("Updating ", ID)
                 const {data, error} = await supabase
                     .from('mediciones')
-                    .update({mantenimiento: peso, tipo: sel})
+                    .update({mantenimiento: peso, tipo: tipo})
                     .eq('id', ID)
                 window.location.reload()
             } else {
-                alert("Se creara un nuevo registro")
-                const {data, error} = await supabase
-                    .from('mediciones')
-                    .insert([
-                        {id: ID, mantenimiento: peso, tipo: sel},
-                    ])
-                window.location.reload()
+                if (tipo === ""){
+                    alert("Missing type")
+                }else{
+                    alert("Creating new Record")
+                    const {data, error} = await supabase
+                        .from('mediciones')
+                        .insert([
+                            {id: ID, mantenimiento: peso, tipo: tipo},
+                        ])
+                    window.location.reload()
+                }
             }
         } else if (e.target.name === "prod") {
             //search in the array
             if (search(Medicion, ID) === true) {
-                alert("Se actuaizara el registro ", ID)
-                const {data, error} = await supabase
-                    .from('mediciones')
-                    .update({Produccion: peso, tipo: sel})
-                    .eq('id', ID)
-                window.location.reload()
+                if (tipo === ""){
+                    alert("Missing type")
+                }else {
+                    alert("Updating ", ID)
+                    const {data, error} = await supabase
+                        .from('mediciones')
+                        .update({Produccion: peso, tipo: tipo})
+                        .eq('id', ID)
+                    window.location.reload()
+                }
             } else {
-                alert("Se creara un nuevo registro")
-                const {data, error} = await supabase
-                    .from('mediciones')
-                    .insert([
-                        {id: ID, Produccion: peso, tipo: sel},
-                    ])
-                window.location.reload()
+                if (tipo === ""){
+                    alert("Missing type")
+                }else {
+                    alert("Creating new Record")
+                    const {data, error} = await supabase
+                        .from('mediciones')
+                        .insert([
+                            {id: ID, Produccion: peso, tipo: tipo},
+                        ])
+                    window.location.reload()
+                }
             }
         } else if (e.target.name === "loginM") {
             if (passM === "@2582") {
                 setSessionM(true);
             } else {
-                alert("contraseña Incorrecta")
+                alert("Wrong Password")
             }
         } else if (e.target.name === "loginP") {
             if (passP === "@6556") {
                 setSessionP(true);
             } else {
-                alert("contraseña Incorrecta")
+                alert("Wrong Password")
             }
         } else if (e.target.name === "loginL") {
             if (passL === "@5885") {
                 setSessionL(true);
             } else {
-                alert("contraseña Incorrecta");
+                alert("Wrong Password");
             }
         }else if (e.target.name === "genP") {
             if (Medicion.length === 0) {
@@ -172,7 +182,7 @@ export default function Home() {
             }
         }
         else if (e.target.name === "genM") {
-            if (Medicion.length === 500) {
+           /* if (Medicion.length === 500) {
                 setId(501)
             } else {
                 for (let i = 500; i < Medicion.length; i++) {
@@ -183,6 +193,11 @@ export default function Home() {
                         setId(i + 1);
                         console.log(i + 1)
                     }
+                }
+            }*/
+            for (let i = 0; i< Medicion.length; i++){
+                if(Medicion[i].id >= 500){
+
                 }
             }
         }else if(e.target.name === "esp"){
@@ -204,6 +219,11 @@ export default function Home() {
 
         }
     }
+
+    useEffect(function () {
+        //GETS THE ROWS FROM SUPABASE
+        getMed()
+    }, [peso,ID]);
 
     return (
         <main>
@@ -311,11 +331,13 @@ export default function Home() {
                                                             <Input name={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} value={peso}/>
                                                             <FormLabel>Tipo</FormLabel>
-                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                            <Select placeholder='-------' onChange={onChange} name={"tipo"}>
                                                                 <option value='Purgas'>Purgas</option>
                                                                 <option value='Polvo'>Polvo</option>
-                                                                <option value='Material Contaminado'>Material Contaminado
-                                                                </option>
+                                                                <option value='Material Contaminado'>Material Contaminado</option>
+                                                                <option value='Regenerado Contaminado'>Regenerado Contaminado</option>
+
+
                                                             </Select>
                                                         </form>
                                                     </ModalBody>
@@ -381,7 +403,7 @@ export default function Home() {
                                                             <Input id={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} name={"peso"} value={peso}/>
                                                             <FormLabel>Tipo</FormLabel>
-                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                            <Select placeholder='-------' onChange={onChange} name={"tipo"}>
                                                                 <option value='Purgas'>Purgas</option>
                                                                 <option value='Polvo'>Polvo</option>
                                                                 <option value='Material Contaminado'>Material Contaminado
@@ -565,11 +587,12 @@ export default function Home() {
                                                             <Input name={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} value={peso}/>
                                                             <FormLabel>Tipo</FormLabel>
-                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                            <Select placeholder='-------' onChange={onChange} name={"tipo"}>
                                                                 <option value='Purgas'>Purgas</option>
                                                                 <option value='Polvo'>Polvo</option>
-                                                                <option value='Material Contaminado'>Material Contaminado
-                                                                </option>
+                                                                <option value='Material Contaminado'>Material Contaminado</option>
+                                                                <option value='Regenerado Contaminado'>Regenerado Contaminado</option>
+
                                                             </Select>
                                                         </form>
                                                     </ModalBody>
@@ -635,11 +658,10 @@ export default function Home() {
                                                             <Input id={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} name={"peso"} value={peso}/>
                                                             <FormLabel>Tipo</FormLabel>
-                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                            <Select placeholder='-------' onChange={onChange} name={"tipo"}>
                                                                 <option value='Purgas'>Purgas</option>
                                                                 <option value='Polvo'>Polvo</option>
                                                                 <option value='Material Contaminado'>Material Contaminado </option>
-                                                                <option value='Material Contaminado'>Regenerado Contaminado </option>
                                                             </Select>
                                                         </form>
                                                     </ModalBody>
@@ -819,7 +841,7 @@ export default function Home() {
                                                             <Input name={"peso"} placeholder='Poids du conteneur'
                                                                    onChange={onChange} value={peso}/>
                                                             <FormLabel>Mec</FormLabel>
-                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                            <Select placeholder='-------' onChange={onChange} name={"tipo"}>
                                                                 <option value='Purgas'>Purges</option>
                                                                 <option value='Polvo'>Poussière</option>
                                                                 <option value='Material Contaminado'>Matériel contaminé
@@ -889,7 +911,7 @@ export default function Home() {
                                                             <Input id={"peso"} placeholder='Poids du conteneur'
                                                                    onChange={onChange} name={"peso"} value={peso}/>
                                                             <FormLabel>Mec</FormLabel>
-                                                            <Select placeholder='-------' onChange={onChange} name={"sel"}>
+                                                            <Select placeholder='-------' onChange={onChange} name={"tipo"}>
                                                                 <option value='Purgas'>Purges</option>
                                                                 <option value='Polvo'>Poussière</option>
                                                                 <option value='Material Contaminado'>Matériel contaminé</option>
