@@ -203,10 +203,11 @@ export default function Controller() {
                                         <th scope="col">ID</th>
                                         <th scope="col">PRODUCCION</th>
                                         <th scope="col">MANTENIIENTO</th>
+                                        <th scope="col">Calidad
+                                        </th>
                                         <th scope="col">LOGISTICS</th>
                                         <th scope="col">Tipo</th>
-                                        <th scope="col">Diferencia M - L</th>
-                                        <th scope="col">Diferencia P - L</th>
+                                        <th scope="col">Diferencia</th>
                                         <th scope="col">Ult. Actualizacion</th>
                                         <th scope="col">Num Control</th>
                                     </tr>
@@ -315,8 +316,7 @@ export default function Controller() {
                                             <th scope="col">MAINTENANCE</th>
                                             <th scope="col">LOGISTICS</th>
                                             <th scope="col">Type</th>
-                                            <th scope="col">Difference M - L</th>
-                                            <th scope="col">Difference P - L</th>
+                                            <th scope="col">Difference</th>
                                             <th scope="col">Creation Date</th>
                                             <th scope="col">Control Number</th>
                                         </tr>

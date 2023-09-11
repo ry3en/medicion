@@ -28,30 +28,49 @@ export default function Home() {
     //Validacion de Modals
     const {isOpen: isPodOpen, onOpen: onPodOpen, onClose: onPodClose} = useDisclosure()
     const {isOpen: isMantOpen, onOpen: onMantOpen, onClose: onMantClose} = useDisclosure()
+    const {isOpen: isQuaOpen, onOpen: onQuaOpen, onClose: onQuaClose} = useDisclosure()
     const {isOpen: isLogOpen, onOpen: onLogOpen, onClose: onLogClose} = useDisclosure()
-    const [sessionP, setSessionP] = useState(false);
     const [passM, setPassM] = useState("");
     const [passL, setPassL] = useState("");
-    const [tipo, setTip] = useState("")
+    const [passC, setPassC] = useState("");
+    const [passP, setPassP] = useState("");
     const [sessionM, setSessionM] = useState(false);
     const [sessionL, setSessionL] = useState(false);
-    const [passP, setPassP] = useState("");
+    const [sessionP, setSessionP] = useState(false);
+    const [sessionC, setSessionC] = useState(false);
+
+    //variables forms
+    const [tipo, setTip] = useState("")
     const [x, setX] = useState(false);
+    const [Medicion, setMedicion] = useState([]);
+    const [ID, setId] = useState('');
+    const [peso, setPeso] = useState('');
+    const [check, setCheck] = useState(false);
+
+    //VARIABLES DE IDIOMA
     const [esp, setEsp] = useState(true);
     const [eng, setEng] = useState(false);
     const [fr, setFr] = useState(false);
 
-    const [Medicion, setMedicion] = useState([]);
-    const [ID, setId] = useState('');
-    const [peso, setPeso] = useState('');
-
-
+    //Funcion para obtener registros de Supabase
     async function getMed() {
         const {data: mediciones, error} = await supabase
             .from('mediciones')
             .select('*')
         setMedicion(mediciones)
         console.log(Medicion)
+    }
+
+     function checkParams(){
+        if (tipo === ""){
+            alert("Missing type")
+        }else if( peso === ""){
+            alert("missing weigth / Falta el peso")
+        }else if( ID === ""){
+            alert("missing ID / Falta el ID")
+        }else{
+            setCheck(true)
+        }
     }
     
 
@@ -70,6 +89,9 @@ export default function Home() {
         }
         if (e.target.name === "passP") {
             setPassP(e.target.value)
+        }
+        if (e.target.name === "passC") {
+            setPassC(e.target.value)
         }
         if (e.target.name === "passL") {
             setPassL(e.target.value)
@@ -103,16 +125,18 @@ export default function Home() {
             //search in the array
             console.log(x, "1")
             if (search(Medicion, ID) === true) {
-                alert("Updating ", ID)
-                const {data, error} = await supabase
-                    .from('mediciones')
-                    .update({mantenimiento: peso, tipo: tipo})
-                    .eq('id', ID)
-                window.location.reload()
+                checkParams();
+                if (check === true) {
+                    alert("Updating ", ID)
+                    const {data, error} = await supabase
+                        .from('mediciones')
+                        .update({mantenimiento: peso, tipo: tipo})
+                        .eq('id', ID)
+                    window.location.reload()
+                }
             } else {
-                if (tipo === ""){
-                    alert("Missing type")
-                }else{
+                checkParams();
+                if (check === true){
                     alert("Creating new Record")
                     const {data, error} = await supabase
                         .from('mediciones')
@@ -122,12 +146,11 @@ export default function Home() {
                     window.location.reload()
                 }
             }
-        } else if (e.target.name === "prod") {
+        }else if (e.target.name === "prod") {
             //search in the array
             if (search(Medicion, ID) === true) {
-                if (tipo === ""){
-                    alert("Missing type")
-                }else {
+                checkParams();
+                if (check === true){
                     alert("Updating ", ID)
                     const {data, error} = await supabase
                         .from('mediciones')
@@ -136,9 +159,8 @@ export default function Home() {
                     window.location.reload()
                 }
             } else {
-                if (tipo === ""){
-                    alert("Missing type")
-                }else {
+                checkParams();
+                if (check === true){
                     alert("Creating new Record")
                     const {data, error} = await supabase
                         .from('mediciones')
@@ -148,7 +170,31 @@ export default function Home() {
                     window.location.reload()
                 }
             }
-        } else if (e.target.name === "loginM") {
+        }else if(e.target.name === "qua"){
+            //search in the array
+            if (search(Medicion, ID) === true) {
+                checkParams();
+                if (check === true){
+                    alert("Updating ", ID)
+                    const {data, error} = await supabase
+                        .from('mediciones')
+                        .update({calidad: peso, tipo: tipo})
+                        .eq('id', ID)
+                    window.location.reload()
+                }
+            } else {
+                checkParams();
+                if (check === true){
+                    alert("Creating new Record")
+                    const {data, error} = await supabase
+                        .from('mediciones')
+                        .insert([
+                            {id: ID, calidad: peso, tipo: tipo},
+                        ])
+                    window.location.reload()
+                }
+            }
+        }else if (e.target.name === "loginM") {
             if (passM === "@2582") {
                 setSessionM(true);
             } else {
@@ -166,41 +212,13 @@ export default function Home() {
             } else {
                 alert("Wrong Password");
             }
-        }else if (e.target.name === "genP") {
-            if (Medicion.length === 0) {
-                setId(1)
-            } else {
-                for (let i = 1; i < Medicion.length; i++) {
-                    if (Medicion.length < 500) {
-                        setId(i + 1);
-                        console.log(i + 1)
-                    } else if (Medicion.length > 1000 && Medicion.length < 1500) {
-                        setId(i + 1);
-                        console.log(i + 1)
-                    }
-                }
-            }
+        }else if (e.target.name === "loginC") {
+        if (passC === "@4658") {
+            setSessionC(true);
+        } else {
+            alert("Wrong Password");
         }
-        else if (e.target.name === "genM") {
-           /* if (Medicion.length === 500) {
-                setId(501)
-            } else {
-                for (let i = 500; i < Medicion.length; i++) {
-                    if (Medicion.length < 1000) {
-                        setId(i + 1);
-                        console.log(i + 1)
-                    } else if (Medicion.length > 1500 && Medicion.length < 2000) {
-                        setId(i + 1);
-                        console.log(i + 1)
-                    }
-                }
-            }*/
-            for (let i = 0; i< Medicion.length; i++){
-                if(Medicion[i].id >= 500){
-
-                }
-            }
-        }else if(e.target.name === "esp"){
+    }else if(e.target.name === "esp"){
             setEng(false);
             setFr(false);
             setEsp(true);
@@ -325,8 +343,8 @@ export default function Home() {
                                                             <Input name={"id"} placeholder='ID del contenedor'
                                                                    onChange={onChange}
                                                                    value={ID}/>
-                                                            <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"genM"}>Generar</Button>
+                                                            {/*<Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"genM"}>Generar</Button>*/}
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input name={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} value={peso}/>
@@ -397,8 +415,8 @@ export default function Home() {
                                                             <FormLabel>ID</FormLabel>
                                                             <Input id={"contenedor"} placeholder='ID del contenedor'
                                                                    onChange={onChange} name={"id"} value={ID}/>
-                                                            <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"genP"}>Generar</Button>
+                                                            {/*<Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"genP"}>Generar</Button>*/}
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input id={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} name={"peso"} value={peso}/>
@@ -428,6 +446,75 @@ export default function Home() {
                                                                        aria-describedby="passwordHelpInline"
                                                                        onChange={onChange}
                                                                        value={passP}/>
+                                                                <button className={"btn btn-primary"}>Login
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </ModalBody>
+                                                </>
+                                            }
+                                        </ModalContent>
+                                    </Modal>
+
+                                    <Button fontSize='2xl'
+                                            leftIcon={<GoPerson/>}
+                                            w={'35vh'} h={'10vh'}
+                                            p={4}
+                                            color='white'
+                                            fontWeight='bold'
+                                            borderRadius='md'
+                                            bgGradient='linear(to right, #4b79a1, #283e51)'
+                                            _hover={{
+                                                bgGradient: 'linear(to-r, red.500, yellow.500)',
+                                            }}
+                                            variant={"solid"}
+                                            onClick={onQuaOpen}
+                                    >
+                                        Calidad
+                                    </Button>
+
+                                    <Modal onClose={onQuaClose} size={'xl'} isOpen={isQuaOpen}>
+                                        <ModalOverlay/>
+                                        <ModalContent>
+                                            <ModalHeader>Calidad</ModalHeader>
+                                            <ModalCloseButton/>
+                                            {sessionC === true ?
+                                                <>
+                                                    <ModalBody>
+                                                        <form name={"calidad"} onSubmit={onSubmit}>
+                                                            <FormLabel>ID</FormLabel>
+                                                            <Input id={"contenedor"} placeholder='ID del contenedor'
+                                                                   onChange={onChange} name={"id"} value={ID}/>
+                                                            {/*<Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"genP"}>Generar</Button>*/}
+                                                            <FormLabel>Peso</FormLabel>
+                                                            <Input id={"peso"} placeholder='Peso del contenedor '
+                                                                   onChange={onChange} name={"peso"} value={peso}/>
+                                                            <FormLabel>Tipo</FormLabel>
+                                                            <Select placeholder='-------' onChange={onChange} name={"tipo"}>
+                                                                <option value='Recortes y Metales'>Recortes y Metales</option>
+                                                                <option value='Material Contaminado'>Material Contaminado
+                                                                </option>
+                                                            </Select>
+                                                        </form>
+                                                    </ModalBody>
+                                                    <ModalFooter>
+                                                        <ButtonGroup gap='1'>
+                                                            <Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"qua"}>Accept</Button>
+                                                            <Button colorScheme='red' onClick={onQuaClose}>Close</Button>
+                                                        </ButtonGroup>
+                                                    </ModalFooter>
+                                                </> : <>
+                                                    <ModalBody>
+                                                        <form className="form-inline" name={"loginC"} onSubmit={onSubmit}>
+                                                            <div className="form-group">
+                                                                <label htmlFor="inputPassword6">Password</label>
+                                                                <input type="password" name={"passC"} id="inputPassword6"
+                                                                       className="form-control mx-sm-3"
+                                                                       aria-describedby="passwordHelpInline"
+                                                                       onChange={onChange}
+                                                                       value={passC}/>
                                                                 <button className={"btn btn-primary"}>Login
                                                                 </button>
                                                             </div>
@@ -581,8 +668,8 @@ export default function Home() {
                                                             <Input name={"id"} placeholder='ID del contenedor'
                                                                    onChange={onChange}
                                                                    value={ID}/>
-                                                            <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"genM"}>Generate</Button>
+                                                            {/*<Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"genM"}>Generate</Button>*/}
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input name={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} value={peso}/>
@@ -652,8 +739,8 @@ export default function Home() {
                                                             <FormLabel>ID</FormLabel>
                                                             <Input id={"contenedor"} placeholder='ID del contenedor'
                                                                    onChange={onChange} name={"id"} value={ID}/>
-                                                            <Button colorScheme='blue' onClick={onSubmit}
-                                                                    name={"genP"}>Generar</Button>
+                                                            {/*<Button colorScheme='blue' onClick={onSubmit}
+                                                                    name={"genP"}>Generar</Button>*/}
                                                             <FormLabel>Peso</FormLabel>
                                                             <Input id={"peso"} placeholder='Peso del contenedor '
                                                                    onChange={onChange} name={"peso"} value={peso}/>
