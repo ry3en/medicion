@@ -15,7 +15,25 @@ const Row = ({medicion}) => {
                             <>
                                 {medicion.mantenimiento === null ?
                                     <>
-                                    </> : <>
+                                        {medicion.Produccion === null ?
+                                            <>
+                                                {medicion.logistica === null ?
+                                                    <>
+                                                        <td> -- %</td>
+                                                        {console.log("askjfdbajsknfdlkasn")}
+                                                    </>:
+                                                    <>
+                                                        <td> 1-- %</td>
+                                                        {console.log("askj123123fdbajsknfdlkasn")}
+                                                    </>
+                                                }
+                                            </> :
+                                            <>
+                                                <td>{(Math.abs((medicion.Produccion - medicion.logistica) / ((medicion.Produccion + medicion.logistica) / 2)) * 100).toFixed(2)} %</td>
+                                            </>
+                                        }
+                                    </> :
+                                    <>
                                         <td>{(Math.abs((medicion.mantenimiento - medicion.logistica) / ((medicion.mantenimiento + medicion.logistica) / 2)) * 100).toFixed(2)} %</td>
                                     </>}
                             </> : <>

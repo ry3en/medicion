@@ -26,18 +26,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export default function Home() {
 
     //Validacion de Modals
-    const {isOpen: isPodOpen, onOpen: onPodOpen, onClose: onPodClose} = useDisclosure()
     const {isOpen: isMantOpen, onOpen: onMantOpen, onClose: onMantClose} = useDisclosure()
-    const {isOpen: isQuaOpen, onOpen: onQuaOpen, onClose: onQuaClose} = useDisclosure()
-    const {isOpen: isLogOpen, onOpen: onLogOpen, onClose: onLogClose} = useDisclosure()
     const [passM, setPassM] = useState("");
-    const [passL, setPassL] = useState("");
-    const [passC, setPassC] = useState("");
     const [passP, setPassP] = useState("");
     const [sessionM, setSessionM] = useState(false);
-    const [sessionL, setSessionL] = useState(false);
-    const [sessionP, setSessionP] = useState(false);
-    const [sessionC, setSessionC] = useState(false);
 
     //variables forms
     const [tipo, setTip] = useState("")
@@ -47,10 +39,6 @@ export default function Home() {
     const [peso, setPeso] = useState('');
     const [check, setCheck] = useState(false);
 
-    //VARIABLES DE IDIOMA
-    const [esp, setEsp] = useState(true);
-    const [eng, setEng] = useState(false);
-    const [fr, setFr] = useState(false);
 
     //Funcion para obtener registros de Supabase
     async function getMed() {
@@ -200,41 +188,6 @@ export default function Home() {
             } else {
                 alert("Wrong Password")
             }
-        } else if (e.target.name === "loginP") {
-            if (passP === "@6556") {
-                setSessionP(true);
-            } else {
-                alert("Wrong Password")
-            }
-        } else if (e.target.name === "loginL") {
-            if (passL === "@5885") {
-                setSessionL(true);
-            } else {
-                alert("Wrong Password");
-            }
-        }else if (e.target.name === "loginC") {
-        if (passC === "@4658") {
-            setSessionC(true);
-        } else {
-            alert("Wrong Password");
-        }
-    }else if(e.target.name === "esp"){
-            setEng(false);
-            setFr(false);
-            setEsp(true);
-            console.log(e.target.name);
-        }else if(e.target.name === "eng"){
-            setFr(false);
-            setEsp(false);
-            setEng(true);
-            console.log(e.target.name);
-
-        }else if(e.target.name === "fr"){
-            setEng(false);
-            setEsp(false);
-            setFr(true);
-            console.log(e.target.name);
-
         }
     }
 

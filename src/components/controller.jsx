@@ -89,7 +89,7 @@ export default function Controller() {
             const {data: mediciones, error} = await supabase
                 .from('mediciones')
                 .select('*')
-                .order('id', { ascending: false })
+                .order('id', { ascending: true })
             setMedicion(mediciones)
             console.log(Medicion, "todos")
         } else if (filt !== "" && xid === "") {
@@ -97,7 +97,7 @@ export default function Controller() {
                 .from('mediciones')
                 .select('*')
                 .eq('num_control', filt)
-                .order('id', { ascending: false })
+                .order('id', { ascending: true })
             setMedicion(mediciones)
             console.log("%" + filt + "%", "filtered NUM CONT")
         }else if (filt === "" && xid !== "") {
@@ -105,7 +105,7 @@ export default function Controller() {
                 .from('mediciones')
                 .select('*')
                 .eq('id', xid)
-                .order('id', { ascending: false })
+                .order('id', { ascending: true })
             setMedicion(mediciones)
             console.log("%" + filt + "%", "filtered ID")
         }
@@ -115,7 +115,7 @@ export default function Controller() {
                 .select('*')
                 .eq( 'id', xid)
                 .eq( 'num_control', filt)
-                .order('id', { ascending: false })
+                .order('id', { ascending: true })
             setMedicion(mediciones)
             console.log("%" + filt + "%", "filtered ID")
         }
